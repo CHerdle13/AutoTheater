@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<header>
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="/">Auto Theater</a>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav">
+	        <li><a href="/about">About</a></li>
+	        <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pick a game!<span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="/bachelor">The Bachelor</a></li>
+	            <li><a href="/scared_off_the_bench">Scared Off the Bench</a></li>
+	          </ul>
+	        </li>
+	      </ul>
+
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+</header>
+
+<head>
+	<div class="container" align="center" style="height:80%">
+	<meta charset="utf-8">
+	<title>Auto Theater</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	<!--<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">-->
+
+	<div class="page-header">
+    <h2>{{ title }}</h2>
+  </div>
+	
+	{% for p in paragraph %}
+	<h4>{{ p }}</h4>
+	{% endfor %}
+
+	{% if title == "Auto Theater" %}
+	<br><br>
+	<!-- Single button -->
+	<div class="btn-group">
+		<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    		Pick a game! <span class="caret"></span>
+  		</button>
+  		<ul class="dropdown-menu">
+    		<li><a href="/bachelor">The Bachelor</a></li>
+    		<li><a href="/scared_off_the_bench">Scared Off the Bench</a></li>
+  		</ul>
+	</div>
+	{% endif %}
+
+	{% if title == "About" %}
+	<br><br>
+	<img src="architecture_diagram.jpg" alt="Architecture Diagram" style="width:1429px;height:859px;">
+	{% endif %}
+
+	{% if game == "Bachelor" or game == "Scared Off the Bench" %}
+
+	<br>
+
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<h4>Create your script:</h4>
+		</div>
+		<div class="panel-body">
+			<form action="" class="form-inline" method="post">
+				{% if game == "Bachelor" %}
+				<div style="float: left; width: 33%">
+					<label for="actors">Number of actors</label>
+					<br>
+					<input type="number" class="form-control" placeholder=3 name="actors" value="{{ request.form.actors }}">
+				</div>
+				<div style="float: left; width: 33%">
+					<label for="topic">Topic</label>
+					<br>
+					<input type="text" class="form-control" name="topic" value="{{ request.form.topic }}">
+				</div>
+				<div style="float: left; width: 33%">
+					<label for="questions">Number of questions</label>
+					<br>
+					<input type="number" class="form-control" placeholder=3 name="questions" value="{{ request.form.questions }}">
+				</div>
+				<br><br><br><br>
+				<div class="panel panel-default">
+  				<div class="panel-heading">
+  					<input type="checkbox" class="form-control" name="skipDownload" value="{{ request.form.skipDownload }}">
+  					<label for="skipDownload">Skip Download</label>
+  				</div>
+  				<div class="panel-body">
+  					If checked, Auto Theater draws from a predetermined database of lines rather than scraping the internet. Greatly speeds up script generation.
+  				</div>
+				</div>
+				{% endif %}
+				{% if game == "Scared Off the Bench" %}
+				<div class="panel panel-default" style="float: left; width: 33%">
+  				<div class="panel-heading">
+  					<input type="checkbox" class="form-control" name="debug" value="{{ request.form.debug }}">
+  					<label for="debug">Debug</label>
+  				</div>
+  				<div class="panel-body">
+  					Shows debugging info.
+  				</div>
+  				</div>
+  				<div class="panel panel-default" style="float: left; width: 33%">
+  				<div class="panel-heading">
+  					<input type="checkbox" class="form-control" name="moreComments" value="{{ request.form.moreComments }}">
+  					<label for="moreComments">More Comments</label>
+  				</div>
+  				<div class="panel-body">
+  					Scrape more comments.
+  				</div>
+  				</div>
+  				<div class="panel panel-default" style="float: left; width: 33%">
+  				<div class="panel-heading">
+  					<input type="checkbox" class="form-control" name="profanityFilter" value="{{ request.form.profanityFilter }}">
+  					<label for="debug">Profanity Filter</label>
+  				</div>
+  				<div class="panel-body">
+  					Keeps the script "clean".
+  				</div>
+  				</div>
+				{% endif %}
+				<input class="btn btn-primary" type="submit" value="Make my script!">
+				<!--
+				<div>
+				<h3>
+				<label class="label label-lg label-warning">
+					<span class="glyphicon glyphicon-refresh spinning"></span> Loading...    
+				</label>
+				</h3>
+				</div>
+				-->
+			</form>
+		</div>
+	</div>
+
+	<br>
+
+	<!--
+	<div id="progress" class="progress">
+		<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+		<span class="sr-only">20% Complete</span>
+		</div>
+	</div>
+	-->
+
+	{% if script %}
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+    		<h3 class="panel-title">SCRIPT</h3>
+  		</div>
+		<div class="panel-body">
+			{% for line in script %}
+			<p>{{ line }}</p>
+			{% endfor %}
+		</div>
+	</div>
+
+	{% endif %}
+
+	{% endif %}
+	</div>
+
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+
+</html>
